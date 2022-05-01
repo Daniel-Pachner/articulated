@@ -1,0 +1,57 @@
+function [d, found, cross] = linetolinedist (a, b, x, y)
+n = [b.y-a.y, a.x-b.x];
+m = [x.x-y.x, x.y-y.y];
+n = n / norm(n);
+m = m / norm(m);
+d = zeros(1, 4);
+found = false(1, 4);
+cross = pointpath(d, d);
+[d(1), found(1), cross(1)] = ab2x(a, b, x, n);
+[d(2), found(2), cross(2)] = ab2x(a, b, y, n);
+if abs(m*n') <= 0.9999
+    [d(3), found(3), cross(3)] = xy2a(x, y, a, n);
+    [d(4), found(4), cross(4)] = xy2a(x, y, b, n);
+end
+[~, j] = max(abs(d));
+d = d(j);
+cross = cross(j);
+found = found(j);
+end
+
+
+function [d, found, cross] = ab2x(a, b, x, n)
+    A = [
+    -1,     0,      b.x-a.x,    0;
+    +0,    -1,      b.y-a.y,    0;
+    +1,     0,      0,          n(1);
+    +0,    +1,      0,          n(2)];
+    b = [-a.x; -a.y; x.x; x.y];
+    s = A \ b;
+    found = (s(3) <= 1 && s(3) >= 0);
+    if found
+        d = s(4);
+    else
+        d = 0;
+    end
+    cross = x;
+end
+
+function [d, found, cross] = xy2a(x, y, a, n)
+    A = [
+    -1,     0,      y.x-x.x,    0;
+    +0,    -1,      y.y-x.y,    0;
+    +1,     0,      0,          n(1);
+    +0,    +1,      0,          n(2)];
+    b = [-x.x; -x.y; a.x; a.y];
+    if min(svd(A)) < 1e-4
+        disp('singular')
+    end
+    s = A \ b;
+    found = (s(3) <= 1 && s(3) >= 0);
+    if found
+        d = -s(4);
+    else
+        d = 0;
+    end
+    cross = pointpath(s(1), s(2));
+end

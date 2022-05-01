@@ -1,0 +1,9 @@
+v = readvdata('tram34Tdata.tabulka');
+r = 20;
+d = 2*v.marks(end).dim;
+p = circularpath(r, d, 30);
+verbose = false;
+plotfigure = true;
+animation = false;
+direction = -1;
+tu = passsection(p, v, direction, verbose, plotfigure, animation);
