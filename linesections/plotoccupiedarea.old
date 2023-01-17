@@ -1,0 +1,62 @@
+ function plotoccupiedarea(p, dl, dr)
+    n = numel(p);
+    a = pointpath(zeros(1, 4), zeros(1, 4));
+    b = pointpath(zeros(1, 4), zeros(1, 4));
+    c = pointpath(zeros(1, 4), zeros(1, 4));
+
+
+    for k = 2 : n - 2
+        v0 = frompathsegment(p, k - 1, k);
+        v1 = frompathsegment(p, k, k + 1);
+        v2 = frompathsegment(p, k + 1, k + 2);
+
+        a(1).x = p(k).x + v1(1)*dr(k);
+        a(1).y = p(k).y + v1(2)*dr(k);
+        a(2).x = p(k+1).x + v1(1)*dr(k);
+        a(2).y = p(k+1).y + v1(2)*dr(k);
+
+        a(3).x = p(k+1).x + v1(1)*dl(k);
+        a(3).y = p(k+1).y + v1(2)*dl(k);
+        a(4).x = p(k).x + v1(1)*dl(k);
+        a(4).y = p(k).y + v1(2)*dl(k);
+
+        b(1).x = p(k).x;
+        b(1).y = p(k).y;
+        b(2).x = p(k).x + 0.5*(v1(1) + v0(1));
+        b(2).y = p(k).y + 0.5*(v1(2) + v0(2));
+
+        b(3).x = p(k+1).x;
+        b(3).y = p(k+1).y;
+        b(4).x = p(k+1).x + 0.5*(v1(1) + v2(1));
+        b(4).y = p(k+1).y + 0.5*(v1(2) + v2(2));
+
+        d(1).x = p(k).x;
+        d(1).y = p(k).y;
+        d(2).x = p(k).x - 0.5*(v1(1) + v0(1));
+        d(2).y = p(k).y - 0.5*(v1(2) + v0(2));
+
+        d(3).x = p(k+1).x;
+        d(3).y = p(k+1).y;
+        d(4).x = p(k+1).x - 0.5*(v1(1) + v2(1));
+        d(4).y = p(k+1).y - 0.5*(v1(2) + v2(2));
+
+        [aux, s1, s2] = lineintersection(b(1), b(2), b(3), b(4));
+        [c(1), ~, t1] = lineintersection(a(1), a(2), b(1), b(2));
+        [c(2), ~, t2] = lineintersection(a(1), a(2), b(3), b(4));
+        if s2 > 0 && t2 > s2
+            c(1) = aux;
+            c(2) = aux;
+        end
+
+        [aux, s1, s2] = lineintersection(d(1), d(2), d(3), d(4));
+        [c(3), ~, t1] = lineintersection(a(3), a(4), d(1), d(2));
+        [c(4), ~, t2] = lineintersection(a(3), a(4), d(3), d(4));
+        if s2 > 0 && t2 > s2
+            c(3) = aux;
+            c(4) = aux;
+        end
+
+        patch([c([1,2,4,3,1]).x], [c([1,2,4,3,1]).y], [0.5, 0.5, 0.5], 'facealpha', 0.3);
+    end
+ end
+

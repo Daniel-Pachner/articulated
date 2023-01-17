@@ -1,0 +1,19 @@
+%%map = struct(...
+%%'radius', {inf, 20, inf, -10, inf}, ...
+%%'angle', {0, pi/2, 0, -pi/2, 0}, ...
+%%'length', {10, inf, 10, inf, 10});
+
+map = struct(...
+'radius', {inf, 20, inf}, ...
+'angle', {0, pi/2, 0}, ...
+'length', {10, inf, 10});
+
+
+p = map2path(map, 2);
+
+figure
+plotpath(p, '-o', 'markersize', 2)
+
+
+s = struct('x', {p.x}, 'y', {p.y});
+write_struct2csv('testcurve.csv', s);

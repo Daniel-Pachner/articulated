@@ -15,7 +15,8 @@ direction = -1;
 modul = 1;
 for k = 1 : numel(tu)
   v = shiftvehicle(tu, v, tu(k).s, direction);
-  tu = putvehicletotunnel(p, tu, v, tu(k).s, direction);
+  %tu = putvehicletotunnel(p, tu, v, tu(k).s, direction);
+  tu = putvehicletotunnel(p, tu, v);
   if k/modul == fix(k/modul)
     plotvehicle(ax, v, false, false, false, 'k');
     drawnow;

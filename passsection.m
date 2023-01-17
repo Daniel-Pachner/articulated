@@ -2,7 +2,7 @@ function tu = passsection(p, v, direction, ...
     verbose = false, plotfigure = true, animation = false)
 
 ax = gca;
-    
+
 midh = p(end).s/2;
 midp = pointonpath(p, midh);
 
@@ -10,12 +10,12 @@ midp = pointonpath(p, midh);
 [v2, h2] = putvehiclefront(p, v, midh, direction, 2, verbose);
 ison = isontracks(p, v1) && isontracks(p, v2);
 
-tu = tunnel(midp); 
+tu = tunnel(midp);
 tu.s = midh;
 
 for h = linspace(h1, h2, 40)
   v = shiftvehicle(p, v, h, direction, verbose);
-  tu = putvehicletotunnel(p, tu, v, h, direction);
+  tu = putvehicletotunnel(p, tu, v); %, h, direction);
   if animation
     plotvehicle(ax, v);
   end

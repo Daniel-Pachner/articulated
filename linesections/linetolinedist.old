@@ -1,3 +1,7 @@
+% Caculates the maximum distance from line [a, b] to line [x, y] The distance
+% is measured perpendicularly to [a, b]. A flag "found" indicates whether such
+% distance is defined (along this perpendicular direction). If it exists, the
+% most distant point on [x, y] is also returned.
 function [d, found, cross] = linetolinedist(a, b, x, y)
 n = [b.y-a.y, a.x-b.x];
 m = [x.x-y.x, x.y-y.y];
@@ -43,9 +47,6 @@ function [d, found, cross] = xy2a(x, y, a, n)
     +1,     0,      0,          n(1);
     +0,    +1,      0,          n(2)];
     b = [-x.x; -x.y; a.x; a.y];
-    if min(svd(A)) < 1e-4
-        disp('singular')
-    end
     s = A \ b;
     found = (s(3) <= 1 && s(3) >= 0);
     if found
